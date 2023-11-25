@@ -36,13 +36,16 @@ class Category extends Component {
           </table>
         </div>
         <div className="inline" />
-        <CategoryDetail item={this.state.itemSelected} />
+        <CategoryDetail item={this.state.itemSelected} updateCategories={this.updateCategories} />
         <div className="float-clear" />
       </div>
     );
   }
   componentDidMount() {
     this.apiGetCategories();
+  }
+  updateCategories = (categories) => { // arrow-function
+    this.setState({ categories: categories });
   }
   // event-handlers
   trItemClick(item) {

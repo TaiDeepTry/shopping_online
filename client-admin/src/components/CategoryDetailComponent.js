@@ -29,9 +29,9 @@ class CategoryDetail extends Component {
               <tr>
                 <td></td>
                 <td>
-                  <input type="submit" value="ADD NEW" />
+                  <input type="submit" value="ADD NEW" onClick={(e) => this.btnAddClick(e)} />
                   <input type="submit" value="UPDATE" onClick={(e) => this.btnUpdateClick(e)} />
-                  <input type="submit" value="DELETE" />
+                  <input type="submit" value="DELETE" onClick={(e) => this.btnDeleteClick(e)} />
                 </td>
               </tr>
             </tbody>
@@ -40,8 +40,23 @@ class CategoryDetail extends Component {
       </div>
     );
   }
-   // event-handlers
-   btnUpdateClick(e) {
+  componentDidUpdate(prevProps) {
+    if (this.props.item !== prevProps.item) {
+      this.setState({ txtID: this.props.item._id, txtName: this.props.item.name });
+    }
+  }
+  // event-handlers
+  btnAddClick(e) {
+    e.preventDefault();
+    const name = this.state.txtName;
+    if (name) {
+      const cate = { name: name };
+      this.apiPostCategory(cate);
+    } else {
+      alert('Please input name');
+    }
+  }
+  btnUpdateClick(e) {
     e.preventDefault();
     const id = this.state.txtID;
     const name = this.state.txtName;
@@ -52,7 +67,30 @@ class CategoryDetail extends Component {
       alert('Please input id and name');
     }
   }
+  btnDeleteClick(e) {
+    e.preventDefault();
+    if (window.confirm('ARE YOU SURE?')) {
+      const id = this.state.txtID;
+      if (id) {
+        this.apiDeleteCategory(id);
+      } else {
+        alert('Please input id');
+      }
+    }
+  }
   // apis
+  apiPostCategory(cate) {
+    const config = { headers: { 'x-access-token': this.context.token } };
+    axios.post('/api/admin/categories', cate, config).then((res) => {
+      const result = res.data;
+      if (result) {
+        alert('OK BABY!');
+        this.apiGetCategories();
+      } else {
+        alert('SORRY BABY!');
+      }
+    });
+  }
   apiPutCategory(id, cate) {
     const config = { headers: { 'x-access-token': this.context.token } };
     axios.put('/api/admin/categories/' + id, cate, config).then((res) => {
@@ -65,10 +103,24 @@ class CategoryDetail extends Component {
       }
     });
   }
-  componentDidUpdate(prevProps) {
-    if (this.props.item !== prevProps.item) {
-      this.setState({ txtID: this.props.item._id, txtName: this.props.item.name });
-    }
+  apiDeleteCategory(id) {
+    const config = { headers: { 'x-access-token': this.context.token } };
+    axios.delete('/api/admin/categories/' + id, config).then((res) => {
+      const result = res.data;
+      if (result) {
+        alert('OK BABY!');
+        this.apiGetCategories();
+      } else {
+        alert('SORRY BABY!');
+      }
+    });
+  }
+  apiGetCategories() {
+    const config = { headers: { 'x-access-token': this.context.token } };
+    axios.get('/api/admin/categories', config).then((res) => {
+      const result = res.data;
+      this.props.updateCategories(result);
+    });
   }
 }
 export default CategoryDetail;
