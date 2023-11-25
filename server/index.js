@@ -24,4 +24,4 @@ app.get('admin/*', (req, res) => {
 app.use('/', express.static(path.resolve(__dirname, '../client-customer/build')));
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../client-customer/build', 'index.html'));
-});
+});4

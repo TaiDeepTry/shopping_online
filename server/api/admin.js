@@ -2,18 +2,13 @@ const express = require('express');
 const router = express.Router();
 // utils
 const JwtUtil = require('../utils/JwtUtil');
+const EmailUtil = require('../utils/EmailUtil');
 // daos
 const AdminDAO = require('../models/AdminDAO');
-// daos
 const CategoryDAO = require('../models/CategoryDAO');
-// daos
 const ProductDAO = require('../models/ProductDAO');
-// daos
 const OrderDAO = require('../models/OrderDAO');
-// daos
 const CustomerDAO = require('../models/CustomerDAO');
-// utils
-const EmailUtil = require('../utils/EmailUtil');
 // login
 router.post('/login', async function (req, res) {
   const username = req.body.username;
@@ -40,6 +35,12 @@ router.get('/categories', JwtUtil.checkToken, async function (req, res) {
   res.json(categories);
 });
 
+router.put('/categories', JwtUtil.checkToken, async function (req, res) {
+  const name = req.body.name;
+  const category = { name: name };
+  const result = await CategoryDAO.insert(category);
+  res.json(result);
+});
 router.post('/categories', JwtUtil.checkToken, async function (req, res) {
   const name = req.body.name;
   const category = { name: name };

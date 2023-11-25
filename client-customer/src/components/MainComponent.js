@@ -16,12 +16,11 @@ import Myorders from './MyordersComponent';
 class Main extends Component {
   render() {
     return (
-      <div className="">
+      <div className="flex flex-col items-center">
         <Menu />
-        <Inform />
+        <Inform/>
         <Routes>
           <Route path='/' element={<Navigate replace to='/home' />} />
-          {/* <Route path='/Feature' element={<Feature/>} /> */}
           <Route path='/home' element={<Home />} />
           <Route path='/product/category/:cid' element={<Product />} />
           <Route path='/product/search/:keyword' element={<Product />} />

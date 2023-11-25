@@ -66,6 +66,12 @@ const ProductDAO = {
     const query = { name: { $regex: new RegExp(keyword, "i") } };
     const products = await Models.Product.find(query).exec();
     return products;
+  },
+  async updateFavoriteState(_id, newStatus) {
+    console.log(`Updating product ${_id} with new favorite state: ${newStatus}`);
+    const newValue = {favorite : newStatus} ;
+    const result = await Models.Product.findByIdAndUpdate(_id, newValue, { new: true });
+    return result;
   }
 };
 module.exports = ProductDAO;

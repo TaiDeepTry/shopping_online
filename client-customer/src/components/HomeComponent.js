@@ -2,6 +2,8 @@ import axios from 'axios';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Banner from './BannerComponent';
+import {Spinner} from "@nextui-org/react";
+
 
 class Home extends Component {
     constructor(props) {
@@ -10,105 +12,86 @@ class Home extends Component {
             newprods: [],
             hotprods: [],
             allprods: [],
-            showBanner: true
+            showBanner: true,
+            loading :true
         };
     }
     render() {
+        if(this.state.allprods.length == 0){
+            return(
+                <div className='w-[100px] h-[500px] flex justify-center items-center'>
+                    <Spinner size='lg' />
+                </div>
+            )
+        }
         const allprods = this.state.allprods.map((item) => {
             return (
-                <div key={item._id} className="flex py-3 px-1 border-2 rounded-2xl mb-2">
-                    <figure>
-                        <a href="" >
-                            <Link to={'/product/' + item._id}>
-                                <img src={"data:image/jpg;base64," + item.image} width="300px" height="300px" alt="" />
-                            </Link>
-                        </a>
-                        <figcaption className="flex justify-center align-center flex-col">
-                            {item.name}
-                            <div className='flex justify-center flex-row'>
-                                <div className='text-lg font-bold'>${item.price}</div>
-                            </div>
-                        </figcaption>
-                        <div className='text-center py-2 bg-black text-white rounded-2xl'>
-                            <Link className='' to={'/product/' + item._id}>
-                                Buy Now
-                            </Link>
-                        </div>
-                    </figure>
-                </div>
+                <a key={item._id} href="" className="group">
+                    <div
+                        className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
+                        <Link to={'/product/' + item._id}>
+                            <img src={"data:image/jpg;base64," + item.image}
+                                className="h-full w-full object-cover object-center group-hover:opacity-75" />
+                        </Link>
+                    </div>
+                    <h3 className="mt-4 text-sm text-gray-700">{item.name}</h3>
+                    <p className="mt-1 text-lg font-medium text-gray-900">${item.price}</p>
+                </a>
             )
         });
         const newprods = this.state.newprods.map((item) => {
             return (
-                <div key={item._id} className="flex py-3 px-1 border-2 rounded-2xl mb-2">
-                    <figure>
-                        <a href="" >
-                            <Link to={'/product/' + item._id}>
-                                <img src={"data:image/jpg;base64," + item.image} width="300px" height="300px" alt="" />
-                            </Link>
-                        </a>
-                        <figcaption className="flex justify-center align-center flex-col">
-                            {item.name}
-                            <div className='flex justify-center flex-row'>
-                                <div className='text-lg font-bold'>${item.price}</div>
-                            </div>
-                        </figcaption>
-                        <div className='text-center py-2 bg-black text-white rounded-2xl'>
-                            <Link className='' to={'/product/' + item._id}>
-                                Buy Now
-                            </Link>
-                        </div>
-                    </figure>
-                </div>
+                <a key={item._id} href="" className="group">    
+                    <div
+                        className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
+                        <Link to={'/product/' + item._id}>
+                            <img src={"data:image/jpg;base64," + item.image}
+                                className="h-full w-full object-cover object-center group-hover:opacity-75" />
+                        </Link>
+                    </div>
+                    <h3 className="mt-4 text-sm text-gray-700">{item.name}</h3>
+                    <p className="mt-1 text-lg font-medium text-gray-900">${item.price}</p>
+                </a>
             );
         });
         const hotprods = this.state.hotprods.map((item) => {
             return (
-                <div key={item._id} className="flex py-3 px-1 border-2 rounded-2xl mb-2">
-                    <figure>
-                        <a href="" >
-                            <Link to={'/product/' + item._id}>
-                                <img src={"data:image/jpg;base64," + item.image} width="300px" height="300px" alt="" />
-                            </Link>
-                        </a>
-                        <figcaption className="flex justify-center align-center flex-col">
-                            {item.name}
-                            <div className='flex justify-center flex-row'>
-                                <div className='text-lg font-bold'>${item.price}</div>
-                            </div>
-                        </figcaption>
-                        <div className='text-center py-2 bg-black text-white rounded-2xl'>
-                            <Link className='' to={'/product/' + item._id}>
-                                Buy Now
-                            </Link>
-                        </div>
-                    </figure>
-                </div>
+                <a key={item._id} href="" className="group">
+                    <div
+                        className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
+                        <Link to={'/product/' + item._id}>
+                            <img src={"data:image/jpg;base64," + item.image}
+                                className="h-full w-full object-cover object-center group-hover:opacity-75" />
+                        </Link>
+                    </div>
+                    <h3 className="mt-4 text-sm text-gray-700">{item.name}</h3>
+                    <p className="mt-1 text-lg font-medium text-gray-900">${item.price}</p>
+                </a>
             );
         })
 
         return (
-
             <div className='w-5/6 mx-auto'>
                 {this.state.showBanner && <Banner onClose={this.closeBanner} />}
                 <div className="">
-                    <h2 className="capitalize text-lg border-b-2 text-black border-black py-1 inline-block w-fit my-4
+                    <h2 className="capitalize text-3xl border-b-2 text-black border-black py-1 inline-block w-fit my-4
                     ">new product</h2>
-                    <div className='flex flex-0 flex-wrap justify-between'>
+
+                    <div className='mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8'>
                         {newprods}
                     </div>
                 </div>
+
+                <h2 className="capitalize text-3xl border-b-2 text-black border-black py-1 inline-block w-fit my-4">hot product</h2>
                 {this.state.hotprods.length > 0 ?
-                    <div className="">
-                        <h2 className="capitalize text-lg border-b-2 text-black border-black py-1 inline-block my-4
-                    ">hot product</h2>
+                    <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
                         {hotprods}
                     </div>
                     : <div />
                 }
                 <div className=''>
-                    <h2>ALL PRODUCTS</h2>
-                    <div className='flex flex-0 flex-wrap justify-between'>
+                    <h2 className="capitalize text-3xl border-b-2 text-black border-black py-1 inline-block w-fit my-4">all product</h2>
+                    <div className='grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8'>
                         {allprods}
                     </div>
                 </div>
@@ -120,6 +103,7 @@ class Home extends Component {
         this.apiGetHotProducts();
         this.apiGetAllProducts();
     }
+
     // apis
     apiGetNewProducts() {
         axios.get('/api/customer/products/new').then((res) => {
@@ -141,6 +125,6 @@ class Home extends Component {
     };
     closeBanner = () => {
         this.setState({ showBanner: false });
-      };
+    };
 }
 export default Home;

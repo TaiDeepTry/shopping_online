@@ -46,6 +46,18 @@ router.get('/products/:id', async function (req, res) {
   const product = await ProductDAO.selectByID(_id);
   res.json(product);
 });
+
+// product
+router.put('/products/favorite/:id', JwtUtil.checkToken, async function (req, res) {
+  const _id = req.params.id;
+  const newStatus = req.body.favorite;
+  try {
+    const result = await ProductDAO.updateFavoriteState(_id, newStatus);
+    res.json({message: 'Favorite state updated successfully', product: result });
+  } catch (error) {
+    res.json({ success: false, message: 'Failed to update favorite state', error: error.message });
+  }
+});
 // customer
 router.post('/signup', async function (req, res) {
   const username = req.body.username;
@@ -78,7 +90,7 @@ router.post('/active', async function (req, res) {
   const token = req.body.token;
   const result = await CustomerDAO.active(_id, token, 1);
   res.json(result);
-}); 
+});
 router.post('/login', async function (req, res) {
   const username = req.body.username;
   const password = req.body.password;
