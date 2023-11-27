@@ -10,4 +10,4 @@ const MyConstants = {
   };
 
 
-module.export = MyConstants;
+module.exports = MyConstants;
