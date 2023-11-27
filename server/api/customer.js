@@ -22,7 +22,7 @@ router.get('/products', async function (req, res) {
 });
 // product
 router.get('/products/new', async function (req, res) {
-  const products = await ProductDAO.selectTopNew(5);
+  const products = await ProductDAO.selectTopNew(4);
   res.json(products);
 });
 router.get('/products/hot', async function (req, res) {

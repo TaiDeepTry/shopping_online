@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "(npm install) && (cd ../client_admin && npm install && npm run build) && (cd ../client_customer && npm install && npm run build)",
+    "build": "(npm install) && (cd ../client-customer && npm install && npm run build) && (cd ../client-admin && npm i && npm run build)",
     "start": "node index.js"
-  },
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -19,3 +19,4 @@
     "nodemailer": "^6.9.7"
   }
 }
+
