@@ -57,7 +57,6 @@ class Product extends Component {
         </div>
         <div className="inline" />
         <ProductDetail item={this.state.itemSelected} curPage={this.state.curPage} updateProducts={this.updateProducts} />
-
         <div className="float-clear" />
       </div>
     );
