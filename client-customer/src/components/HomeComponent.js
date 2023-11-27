@@ -21,47 +21,50 @@ class Home extends Component {
     render() {
         const allprods = this.state.allprods.map((item) => {
             return (
-                <a key={item._id} href="" className="group">
+                <div key={item._id} href="" className="group">
                     <div
                         className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
                         <Link to={'/product/' + item._id}>
                             <img src={"data:image/jpg;base64," + item.image}
+                                alt='phone img'
                                 className="h-full w-full object-cover object-center group-hover:opacity-75" />
                         </Link>
                     </div>
                     <h3 className="mt-4 text-sm text-gray-700">{item.name}</h3>
                     <p className="mt-1 text-lg font-medium text-gray-900">${item.price}</p>
-                </a>
+                </div>
             )
         });
         const newprods = this.state.newprods.map((item) => {
             return (
-                <a key={item._id} href="" className="group">
+                <div key={item._id} href="" className="group">
                     <div
                         className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
                         <Link to={'/product/' + item._id}>
                             <img src={"data:image/jpg;base64," + item.image}
+                            alt='phone img'
                                 className="h-full w-full object-cover object-center group-hover:opacity-75" />
                         </Link>
                     </div>
                     <h3 className="mt-4 text-sm text-gray-700">{item.name}</h3>
                     <p className="mt-1 text-lg font-medium text-gray-900">${item.price}</p>
-                </a>
+                </div>
             );
         });
         const hotprods = this.state.hotprods.map((item) => {
             return (
-                <a key={item._id} href="" className="group bg-white p-4 rounded-2xl">
+                <div key={item._id} href="" className="group bg-white p-4 rounded-2xl">
                     <div
                         className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
                         <Link to={'/product/' + item._id}>
                             <img src={"data:image/jpg;base64," + item.image}
+                            alt='phone img'
                                 className="h-full w-full object-cover object-center group-hover:opacity-75" />
                         </Link>
                     </div>
                     <h3 className="mt-4 text-sm text-gray-700">{item.name}</h3>
                     <p className="mt-1 text-lg font-medium text-gray-900">${item.price}</p>
-                </a>
+                </div>
             );
         })
 
@@ -104,28 +107,28 @@ class Home extends Component {
     }
     // apis
     apiGetNewProducts() {
-        this.state.loadingNew = true;
+        this.setState({loadingNew : true})
         axios.get('/api/customer/products/new').then((res) => {
             const result = res.data;
             this.setState({ newprods: result });
-            this.state.loadingNew = false
+            this.setState({loadingNew : false})
         });
     }
     apiGetHotProducts() {
-        this.state.loadingHot = true;
+        this.setState({loadingHot : true})
         axios.get('/api/customer/products/hot').then((res) => {
             const result = res.data;
             this.setState({ hotprods: result });
-            this.state.loadingHot = false;
+            this.setState({loadingHot : false})
 
         });
     }
     apiGetAllProducts = () => {
-        this.state.loadingAll = true;
+        this.setState({loadingAll : true})
         axios.get("api/customer/products").then((res) => {
             const result = res.data;
             this.setState(({ allprods: result }));
-            this.state.loadingAll = false;
+            this.setState({loadingAll : false})
         });
     };
     closeBanner = () => {

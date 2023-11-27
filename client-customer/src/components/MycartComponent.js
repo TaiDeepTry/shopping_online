@@ -15,7 +15,6 @@ class Mycart extends Component {
       congrat:false
     }
   }
-
   onOpen = () => {
     this.setState({ isOpen: true });
   };
@@ -59,7 +58,7 @@ class Mycart extends Component {
       <div className="flex gap-10 w-3/5 py-10">
         <Modal isOpen={isOpen} onOpenChange={this.onClose}>
           <ModalContent>
-            {(onClose, lnkCheckoutClick) => (
+            {(onClose) => (
               <>
                 <ModalHeader className="flex flex-col gap-1">Confirm!</ModalHeader>
                 <ModalBody>

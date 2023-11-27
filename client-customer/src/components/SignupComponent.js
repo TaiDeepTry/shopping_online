@@ -1,5 +1,9 @@
 import axios from 'axios';
 import React, { Component } from 'react';
+import withRouter from '../utils/withRouter';
+// import withRouter from 'react-router-dom';
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button} from "@nextui-org/react";
+import {Input} from "@nextui-org/react";
 
 class Signup extends Component {
   constructor(props) {
@@ -9,12 +13,48 @@ class Signup extends Component {
       txtPassword: '',
       txtName: '',
       txtPhone: '',
-      txtEmail: ''
+      txtEmail: '',
+      isOpen: false,
+      isNumber : true
     };
+  }
+  onOpen = () => {
+    this.setState({ isOpen: true });
+  };
+  onClose = () => {
+    this.setState({ isOpen: false });
+  };
+  goToActive = () => {
+    this.props.navigate('/active');
   }
   render() {
     return (
-      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+      <div className="flex min-h-full w-1/3 flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+        <Modal isOpen={this.state.isOpen} onOpenChange={this.onClose}>
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalHeader className="flex flex-col gap-1">Success</ModalHeader>
+                <ModalBody>
+                  <p>
+                    Congratulations! You almost done.
+                  </p>
+                  <p>
+                    Please check your email to activate your account.
+                  </p>
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="default" variant="light" onPress={onClose}>
+                    Close
+                  </Button>
+                  <Button color="primary" variant="light" onPress={this.goToActive}>
+                    Go to Active Page
+                  </Button>
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img
             className="mx-auto h-10 w-auto"
@@ -26,77 +66,84 @@ class Signup extends Component {
           </h2>
         </div>
 
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+        <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
           <form className="space-y-6" action="#" method="POST">
             <div>
-              <label htmlFor="text" className="block text-sm font-medium leading-6 text-gray-900">
-                User Name
-              </label>
               <div className="mt-2">
-                <input
-                  type="text" value={this.state.txtUsername} onChange={(e) => { this.setState({ txtUsername: e.target.value }) }}
-                  className="block w-full p-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                <Input
+                  type="text" value={this.state.txtUsername} 
+                  onChange={(e) => { this.setState({ txtUsername: e.target.value }) }}
+                  label='Username'
+                  labelPlacement='outside'
+                  isRequired={true}
+                  variant='bordered'
                 />
               </div>
             </div>
 
             <div>
-              <div className="flex items-center justify-between">
-                <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
-                  Password
-                </label>
-              </div>
               <div className="mt-2">
-                <input
-                  type="password" value={this.state.txtPassword} onChange={(e) => { this.setState({ txtPassword: e.target.value }) }}
-                  className="block w-full p-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                <Input
+                  type="password" 
+                  value={this.state.txtPassword} 
+                  onChange={(e) => { this.setState({ txtPassword: e.target.value }) }}
+                  label='Password'
+                  labelPlacement='outside'
+                  isRequired={true}
+                  variant='bordered'
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                Your Name
-              </label>
               <div className="mt-2">
-                <input
-                  type="text" value={this.state.txtName} onChange={(e) => { this.setState({ txtName: e.target.value }) }}
-                  className="block w-full p-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                <Input
+                  type="text" 
+                  value={this.state.txtName} 
+                  onChange={(e) => { this.setState({ txtName: e.target.value }) }}
+                  label='Full name'
+                  labelPlacement='outside'
+                  isRequired={true}
+                  variant='bordered'
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="tel" className="block text-sm font-medium leading-6 text-gray-900">
-                Phone
-              </label>
               <div className="mt-2">
-                <input
-                  type="tel" value={this.state.txtPhone} onChange={(e) => { this.setState({ txtPhone: e.target.value }) }}
-                  className="block w-full p-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                <Input
+                  type="tel" 
+                  value={this.state.txtPhone} 
+                  onChange={(e) => { this.setState({ txtPhone: e.target.value }) }}
+                  label='Phone number'
+                  labelPlacement='outside'
+                  isRequired={true}
+                  variant='bordered'
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                Email address
-              </label>
               <div className="mt-2">
-                <input
-                  type="email" value={this.state.txtEmail} onChange={(e) => { this.setState({ txtUsername: e.target.value }) }}
-                  className="block w-full p-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                <Input
+                  type="email" 
+                  value={this.state.txtEmail} 
+                  onChange={(e) => { this.setState({ txtEmail: e.target.value }) }}
+                  label='Email'
+                  labelPlacement='outside'
+                  isRequired={true}
+                  variant='bordered'
                 />
               </div>
             </div>
 
             <div>
-              <button
+              <Button
                 type="submit" value="SIGN-UP" onClick={(e) => this.btnSignupClick(e)}
-                className="flex w-full justify-center rounded-md bg-[#2E2E2E] hover:bg-black px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="flex w-full justify-center bg-[#2E2E2E] hover:bg-black px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 Sign Up
-              </button>
+              </Button>
             </div>
           </form>
           <p className="mt-10 text-center text-sm text-gray-500">
@@ -120,6 +167,7 @@ class Signup extends Component {
     if (username && password && name && phone && email) {
       const account = { username: username, password: password, name: name, phone: phone, email: email };
       this.apiSignup(account);
+
     } else {
       alert('Please input username and password and name and phone and email');
     }
@@ -128,8 +176,8 @@ class Signup extends Component {
   apiSignup(account) {
     axios.post('/api/customer/signup', account).then((res) => {
       const result = res.data;
-      alert(result.message);
+      this.onOpen();
     });
   }
 }
-export default Signup;
+export default withRouter(Signup);

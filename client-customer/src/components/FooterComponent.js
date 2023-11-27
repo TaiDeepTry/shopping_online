@@ -3,7 +3,8 @@ import React from 'react';
 class Footer extends React.Component {
     render() {
         return (
-            <div className='w-full bg-black grid grid-cols-3 text-white px-40 py-24'>
+            <div className=''>
+                <div className='w-full bg-black grid grid-cols-3 text-white px-40 py-24 '>
                 <div className='grid-cols-1 flex flex-col'>
                     <span className='text-2xl font-bold mb-7'>
                         TuanTai
@@ -68,6 +69,7 @@ class Footer extends React.Component {
                     </span>
                 </div>
 
+            </div>
             </div>
         );
     }

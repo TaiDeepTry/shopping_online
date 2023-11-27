@@ -6,19 +6,18 @@ class Menu extends Component {
   render() {
     return (
       <div className="border-bottom">
-         <div className="float-left">
-        <ul className="menu">
-          <li className="menu"><Link to='/admin/home'>Home</Link></li>
-          <li className="menu"><Link to='/admin/category'>Category</Link></li>
-          <li className="menu"><Link to='/admin/product'>Product</Link></li>
-          <li className="menu"><Link to='/admin/order'>Order</Link></li>
-          <li className="menu"><Link to='/admin/customer'>Customer</Link></li>
-
-        </ul>
-      </div>
+        <div className="float-left">
+          <ul className="menu">
+            <li className="menu"><Link to='/admin/home'>Home</Link></li>
+            <li className="menu"><Link to='/admin/category'>Category</Link></li>
+            <li className="menu"><Link to='/admin/product'>Product</Link></li>
+            <li className="menu"><Link to='/admin/order'>Order</Link></li>
+            <li className="menu"><Link to='/admin/customer'>Customer</Link></li>
+          </ul>
+        </div>
         <div className="float-right">
-         <Link to='/admin/home' onClick={() => this.lnkLogoutClick()}>Logout</Link>
-      </div>
+          <Link to='/admin/home' onClick={() => this.lnkLogoutClick()}>Logout</Link>
+        </div>
         <div className="float-clear" />
       </div>
     );

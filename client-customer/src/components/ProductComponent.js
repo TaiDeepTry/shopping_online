@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import withRouter from '../utils/withRouter';
 import { Spinner } from "@nextui-org/react";
@@ -23,17 +23,18 @@ class Product extends Component {
     }
     const prods = this.state.products.map((item) => {
       return (
-        <a key={item._id} href="" className="group">
+        <div  key={item._id} className="group cursor-pointer">
           <div
             className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
             <Link to={'/product/' + item._id}>
               <img src={"data:image/jpg;base64," + item.image}
+              alt='phone img'
                 className="h-full w-full object-cover object-center group-hover:opacity-75" />
             </Link>
           </div>
           <h3 className="mt-4 text-sm text-gray-700">{item.name}</h3>
           <p className="mt-1 text-lg font-medium text-gray-900">${item.price}</p>
-        </a>
+        </div>
       );
     });
     return (
@@ -62,20 +63,24 @@ class Product extends Component {
     }
   }
   // apis
-  apiGetProductsByKeyword(keyword) {
-    axios.get('/api/customer/products/search/' + keyword).then((res) => {
-      const result = res.data;
-      this.setState({ products: result });
-    });
-  }
+  // apiGetProductsByKeyword(keyword) {
+  //   axios.get('/api/customer/products/search/' + keyword).then((res) => {
+  //     const result = res.data;
+  //     this.setState({ products: result });
+  //   });
+  // }
   // apis
-  apiGetProductsByCatID(cid) {
-    axios.get('/api/customer/products/category/' + cid).then((res) => {
-      const result = res.data;
-      this.setState({ products: result });
-    });
-  }
+  // apiGetProductsByCatID(cid) {
+  //   axios.get('/api/customer/products/category/' + cid).then((res) => {
+  //     const result = res.data;
+  //     this.setState({ products: result });
+  //   });
+  // }
   apiGetProductsByKeyword(keyword) {
+    if (!keyword) {
+      this.setState({ products: [], loading: false });
+      return;
+    }
     this.setState({loading:true})
     axios.get('/api/customer/products/search/' + keyword)
       .then((res) => {

@@ -52,9 +52,9 @@ class ProductDetail extends Component {
               <tr>
                 <td></td>
                 <td>
-                <input type="submit" value="ADD NEW" onClick={(e) => this.btnAddClick(e)} />
-                <input type="submit" value="UPDATE" onClick={(e) => this.btnUpdateClick(e)} />
-                <input type="submit" value="DELETE" onClick={(e) => this.btnDeleteClick(e)} />
+                  <input type="submit" value="ADD NEW" onClick={(e) => this.btnAddClick(e)} />
+                  <input type="submit" value="UPDATE" onClick={(e) => this.btnUpdateClick(e)} />
+                  <input type="submit" value="DELETE" onClick={(e) => this.btnDeleteClick(e)} />
                 </td>
               </tr>
               <tr>
@@ -78,7 +78,7 @@ class ProductDetail extends Component {
       }
     }
   }
-  
+
   // apis
   apiDeleteProduct(id) {
     const config = { headers: { 'x-access-token': this.context.token } };
@@ -92,77 +92,77 @@ class ProductDetail extends Component {
       }
     });
   }
-    // event-handlers
-    btnUpdateClick(e) {
-        e.preventDefault();
-        const id = this.state.txtID;
-        const name = this.state.txtName;
-        const price = parseInt(this.state.txtPrice);
-        const category = this.state.cmbCategory;
-        const image = this.state.imgProduct.replace(/^data:image\/[a-z]+;base64,/, ''); // remove "data:image/...;base64,"
-        if (id && name && price && category && image) {
-          const prod = { name: name, price: price, category: category, image: image };
-          this.apiPutProduct(id, prod);
-        } else {
-          alert('Please input id and name and price and category and image');
-        }
+  // event-handlers
+  btnUpdateClick(e) {
+    e.preventDefault();
+    const id = this.state.txtID;
+    const name = this.state.txtName;
+    const price = parseInt(this.state.txtPrice);
+    const category = this.state.cmbCategory;
+    const image = this.state.imgProduct.replace(/^data:image\/[a-z]+;base64,/, ''); // remove "data:image/...;base64,"
+    if (id && name && price && category && image) {
+      const prod = { name: name, price: price, category: category, image: image };
+      this.apiPutProduct(id, prod);
+    } else {
+      alert('Please input id and name and price and category and image');
+    }
+  }
+  // apis
+  apiPutProduct(id, prod) {
+    const config = { headers: { 'x-access-token': this.context.token } };
+    axios.put('/api/admin/products/' + id, prod, config).then((res) => {
+      const result = res.data;
+      if (result) {
+        alert('OK BABY!');
+        this.apiGetProducts();
+      } else {
+        alert('SORRY BABY!');
       }
-      // apis
-      apiPutProduct(id, prod) {
-        const config = { headers: { 'x-access-token': this.context.token } };
-        axios.put('/api/admin/products/' + id, prod, config).then((res) => {
+    });
+  }
+  // event-handlers
+  btnAddClick(e) {
+    e.preventDefault();
+    const name = this.state.txtName;
+    const price = parseInt(this.state.txtPrice);
+    const category = this.state.cmbCategory;
+    const image = this.state.imgProduct.replace(/^data:image\/[a-z]+;base64,/, ''); // remove "data:image/...;base64,"
+    if (name && price && category && image) {
+      const prod = { name: name, price: price, category: category, image: image };
+      this.apiPostProduct(prod);
+    } else {
+      alert('Please input name and price and category and image');
+    }
+  }
+  // apis
+  apiPostProduct(prod) {
+    const config = { headers: { 'x-access-token': this.context.token } };
+    axios.post('/api/admin/products', prod, config).then((res) => {
+      const result = res.data;
+      if (result) {
+        alert('OK BABY!');
+        this.apiGetProducts();
+      } else {
+        alert('SORRY BABY!');
+      }
+    });
+  }
+  apiGetProducts() {
+    const config = { headers: { 'x-access-token': this.context.token } };
+    axios.get('/api/admin/products?page=' + this.props.curPage, config).then((res) => {
+      const result = res.data;
+      this.props.updateProducts(result.products, result.noPages, result.curPage);
+      if (result.products.length !== 0) {
+        this.props.updateProducts(result.products, result.noPages, result.curPage);
+      } else {
+        const curPage = this.props.curPage - 1;
+        axios.get('/api/admin/products?page=' + curPage, config).then((res) => {
           const result = res.data;
-          if (result) {
-            alert('OK BABY!');
-            this.apiGetProducts();
-          } else {
-            alert('SORRY BABY!');
-          }
+          this.props.updateProducts(result.products, result.noPages, curPage);
         });
       }
-    // event-handlers
-    btnAddClick(e) {
-        e.preventDefault();
-        const name = this.state.txtName;
-        const price = parseInt(this.state.txtPrice);
-        const category = this.state.cmbCategory;
-        const image = this.state.imgProduct.replace(/^data:image\/[a-z]+;base64,/, ''); // remove "data:image/...;base64,"
-        if (name && price && category && image) {
-          const prod = { name: name, price: price, category: category, image: image };
-          this.apiPostProduct(prod);
-        } else {
-          alert('Please input name and price and category and image');
-        }
-      }
-      // apis
-      apiPostProduct(prod) {
-        const config = { headers: { 'x-access-token': this.context.token } };
-        axios.post('/api/admin/products', prod, config).then((res) => {
-          const result = res.data;
-          if (result) {
-            alert('OK BABY!');
-            this.apiGetProducts();
-          } else {
-            alert('SORRY BABY!');
-          }
-        });
-      }
-      apiGetProducts() {
-        const config = { headers: { 'x-access-token': this.context.token } };
-        axios.get('/api/admin/products?page=' + this.props.curPage, config).then((res) => {
-          const result = res.data;
-          this.props.updateProducts(result.products, result.noPages, result.curPage);
-          if (result.products.length !== 0) {
-            this.props.updateProducts(result.products, result.noPages, result.curPage);
-          }else {
-            const curPage = this.props.curPage - 1;
-            axios.get('/api/admin/products?page=' + curPage, config).then((res) => {
-              const result = res.data;
-              this.props.updateProducts(result.products, result.noPages, curPage);
-            });
-          }
-        });
-      }
+    });
+  }
   componentDidMount() {
     this.apiGetCategories();
   }

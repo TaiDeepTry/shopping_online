@@ -23,7 +23,7 @@ class Order extends Component {
           <td>{item.status}</td>
           <td>
             {item.status === 'PENDING' ?
-                <div><span className="link" onClick={() => this.lnkApproveClick(item._id)}>APPROVE</span> || <span className="link" onClick={() => this.lnkCancelClick(item._id)}>CANCEL</span></div>
+              <div><span className="link" onClick={() => this.lnkApproveClick(item._id)}>APPROVE</span> || <span className="link" onClick={() => this.lnkCancelClick(item._id)}>CANCEL</span></div>
               : <div />}
           </td>
         </tr>
@@ -100,8 +100,8 @@ class Order extends Component {
       this.setState({ orders: result });
     });
   }
-   // event-handlers
-   lnkApproveClick(id) {
+  // event-handlers
+  lnkApproveClick(id) {
     this.apiPutOrderStatus(id, 'APPROVED');
   }
   lnkCancelClick(id) {

@@ -2,19 +2,19 @@ import axios from 'axios';
 import React, { Component } from 'react';
 import MyContext from '../contexts/MyContext';
 import withRouter from '../utils/withRouter';
-
+import { Button, Input } from '@nextui-org/react';
 class Login extends Component {
   static contextType = MyContext; // using this.context to access global state
   constructor(props) {
     super(props);
     this.state = {
-      txtUsername: 'taikk',
-      txtPassword: '1234'
+      incorrect: false,
+      empty: false,
     };
   }
   render() {
     return (
-      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+      <div className="flex min-h-full w-1/3 flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img
             className="mx-auto h-10 w-auto"
@@ -26,42 +26,48 @@ class Login extends Component {
           </h2>
         </div>
 
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" action="#" method="POST">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                Email address
-              </label>
+        <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
+          <form className="space-y-6" action="#" autoComplete='off' method="POST">
               <div className="mt-2">
-                <input
-                  type="text" value={this.state.txtUsername} onChange={(e) => { this.setState({ txtUsername: e.target.value }) }}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-2"
+                <Input
+                  type="text" onChange={(e) => { this.setState({ txtUsername: e.target.value }) }}
+                  onFocus={() => { this.setState({ incorrect: false, empty: false }) }}
+                  color='default'
+                  label='Username'
+                  labelPlacement='outside'
+                  isRequired={true}
+                  variant='bordered'
+                  isInvalid={this.state.incorrect || this.state.empty}
+                />
+              </div>
+
+            <div>
+              <div className="mt-4">
+                <Input
+                  type="password"
+                  onChange={(e) => { this.setState({ txtPassword: e.target.value }) }}
+                  onFocus={() => { this.setState({ incorrect: false, empty: false }) }}
+                  label='Password'
+                  labelPlacement='outside'
+                  isRequired={true}
+                  isInvalid={this.state.incorrect || this.state.empty}
+                  variant='bordered'
                 />
               </div>
             </div>
-
             <div>
-              <div className="flex items-center justify-between">
-                <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900 ">
-                  Password
-                </label>
-
-              </div>
-              <div className="mt-2">
-                <input
-                  type="password" value={this.state.txtPassword} onChange={(e) => { this.setState({ txtPassword: e.target.value }) }}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-2"
-                />
-              </div>
+              <span>
+                {this.state.incorect && <p className="text-red-500 text-sm">Incorrect username or password</p>}
+                {this.state.empty && <p className="text-red-500 text-sm">Please input username and password</p>}
+              </span>
             </div>
-
             <div>
-              <button
+              <Button
                 type="submit" value="LOGIN" onClick={(e) => this.btnLoginClick(e)}
-                className="flex w-full justify-center rounded-md hover:bg-black px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm bg-[#2E2E2E] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="flex w-full justify-center hover:bg-black px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm bg-[#2E2E2E] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 Sign in
-              </button>
+              </Button>
             </div>
           </form>
           <p className="mt-10 text-center text-sm text-gray-500">
@@ -83,7 +89,8 @@ class Login extends Component {
       const account = { username: username, password: password };
       this.apiLogin(account);
     } else {
-      alert('Please input username and password');
+      this.setState({ empty: true });
+      // alert('Please input username and password');
     }
   }
   // apis
@@ -95,7 +102,7 @@ class Login extends Component {
         this.context.setCustomer(result.customer);
         this.props.navigate('/home');
       } else {
-        alert(result.message);
+        this.setState({ incorrect: true });
       }
     });
   }
