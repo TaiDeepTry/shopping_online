@@ -57,7 +57,7 @@ class Login extends Component {
             </div>
             <div>
               <span>
-                {this.state.incorect && <p className="text-red-500 text-sm">Incorrect username or password</p>}
+                {this.state.incorrect && <p className="text-red-500 text-sm">Incorrect username or password</p>}
                 {this.state.empty && <p className="text-red-500 text-sm">Please input username and password</p>}
               </span>
             </div>
