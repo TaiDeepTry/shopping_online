@@ -1,7 +1,7 @@
 //CLI: npm install jsonwebtoken --save
 const jwt = require('jsonwebtoken');
+// import MyConstants from './MyConstants';
 const MyConstants = require('./MyConstants');
-// import MyConstants from "./MyConstants";
 
 const JwtUtil = {
   genToken(username, password) {
