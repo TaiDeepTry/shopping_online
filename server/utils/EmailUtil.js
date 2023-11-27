@@ -1,5 +1,7 @@
 const nodemailer = require('nodemailer');
-const MyConstants = require('./MyConstants');
+// const MyConstants = require('./MyConstants');
+import MyConstants from "./MyConstants";
+
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
