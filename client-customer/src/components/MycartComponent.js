@@ -4,9 +4,26 @@ import CartUtil from '../utils/CartUtil';
 import axios from 'axios';
 import withRouter from '../utils/withRouter';
 import { Button } from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@nextui-org/react";
 
 class Mycart extends Component {
   static contextType = MyContext; // using this.context to access global state
+  constructor(props) {
+    super(props);
+    this.state = {
+      isOpen: false,
+      congrat:false
+    }
+  }
+
+  onOpen = () => {
+    this.setState({ isOpen: true });
+  };
+
+  onClose = () => {
+    this.setState({ isOpen: false });
+  };
+
   render() {
     const mycart = this.context.mycart.map((item, index) => {
       return (
@@ -37,8 +54,37 @@ class Mycart extends Component {
         </div>
       );
     });
+    const { isOpen } = this.state;
     return (
       <div className="flex gap-10 w-3/5 py-10">
+        <Modal isOpen={isOpen} onOpenChange={this.onClose}>
+          <ModalContent>
+            {(onClose, lnkCheckoutClick) => (
+              <>
+                <ModalHeader className="flex flex-col gap-1">Confirm!</ModalHeader>
+                <ModalBody>
+                  <p>
+                    Are you sure you want to purchase
+                  </p>
+                  <p>
+                    This is an important decision and will impact your bank account!
+                  </p>
+                  <p>
+                    Please note that we support a return policy within 7 days. If you are not satisfied, you can return the product.
+                  </p>
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="danger" variant="light" onPress={onClose}>
+                    Maybe later
+                  </Button>
+                  <Button color="primary" onPress={() => this.lnkCheckoutClick()}>
+                    Sure
+                  </Button>
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
         <div className='w-1/2'>
           <h2 className="font-bold text-lg">Shopping Cart</h2>
           {mycart}
@@ -73,7 +119,7 @@ class Mycart extends Component {
               <span>${CartUtil.getTotal(this.context.mycart)}</span>
             </div>
           </div>
-          <Button color="primary" onClick={() => this.lnkCheckoutClick()} >
+          <Button onPress={this.onOpen} color="primary" >
             Checkout
           </Button>
         </div>
@@ -89,20 +135,18 @@ class Mycart extends Component {
     }
   }
   // event-handlers
-  lnkCheckoutClick() {
-    if (window.confirm('ARE YOU SURE?')) {
-      if (this.context.mycart.length > 0) {
-        const total = CartUtil.getTotal(this.context.mycart);
-        const items = this.context.mycart;
-        const customer = this.context.customer;
-        if (customer) {
-          this.apiCheckout(total, items, customer);
-        } else {
-          this.props.navigate('/login');
-        }
+  lnkCheckoutClick () {
+    if (this.context.mycart.length > 0) {
+      const total = CartUtil.getTotal(this.context.mycart);
+      const items = this.context.mycart;
+      const customer = this.context.customer;
+      if (customer) {
+        this.apiCheckout(total, items, customer);
       } else {
-        alert('Your cart is empty');
+        this.props.navigate('/login');
       }
+    } else {
+      alert('Your cart is empty');
     }
   }
   // apis

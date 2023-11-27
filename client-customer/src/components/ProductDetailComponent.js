@@ -4,7 +4,8 @@ import withRouter from '../utils/withRouter';
 import MyContext from '../contexts/MyContext';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@nextui-org/react";
 import { Spinner } from "@nextui-org/react";
-import {Progress} from "@nextui-org/react";
+import { Progress } from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
 
 
 
@@ -15,10 +16,31 @@ class ProductDetail extends Component {
     this.state = {
       product: null,
       txtQuatity: 1,
-      loading: true
+      loading: true,
+      isOpen: false,
+      congrats: false
     };
   }
+  // Define your open and close methods
+  onOpen = () => {
+    this.setState({ isOpen: true });
+  };
+
+  onClose = () => {
+    this.setState({ isOpen: false });
+  };
+
+  congratsOpen = () => {
+    this.setState({ congrats: true });
+
+  }
+  congratsClose = () => {
+    this.setState({ congrats: false });
+
+  }
+
   render() {
+    const { isOpen, congrats } = this.state;
     if (this.state.loading) {
       return (
         <div className='w-[100px] h-[500px] flex justify-center items-center'>
@@ -26,10 +48,56 @@ class ProductDetail extends Component {
         </div>
       );
     }
+
     const prod = this.state.product;
     if (prod != null) {
       return (
-        <div className="w-5/6 flex items-center justify-center my-10 flex-col gap-5">
+        <div className="w-5/6 flex relative items-center justify-center my-10 flex-col gap-5">
+          <Modal isOpen={isOpen} onOpenChange={this.onClose}>
+            <ModalContent>
+              {(onClose) => (
+                <>
+                  <ModalHeader className="flex flex-col gap-1">Quantity invalid</ModalHeader>
+                  <ModalBody>
+                    <p>
+                      Please input quantity
+                    </p>
+                  </ModalBody>
+                  <ModalFooter>
+                    <Button color="danger" variant="light" onPress={onClose}>
+                      Close
+                    </Button>
+                  </ModalFooter>
+                </>
+              )}
+            </ModalContent>
+          </Modal>
+
+          <Modal isOpen={congrats} onOpenChange={this.congratsClose}>
+            <ModalContent>
+              {(congratsClose) => (
+                <>
+                  <ModalHeader color="primary" className="flex flex-col gap-1">Congratulation</ModalHeader>
+                  <ModalBody >
+                    <p className='items-center flex justify-center text-green-700'>
+                      <svg className='h-6' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </p>
+                    <p>
+                      The product has been added in your cart
+                    </p>
+                  </ModalBody>
+                  <ModalFooter>
+                    <Button color="success" variant="light" onPress={congratsClose}>
+                      Close
+                    </Button>
+                  </ModalFooter>
+                </>
+              )}
+            </ModalContent>
+          </Modal>
+
           <figure className="caption-right">
             <img src={"data:image/jpg;base64," + prod.image} width="400px" height="400px" alt="" />
             <figcaption>
@@ -49,7 +117,7 @@ class ProductDetail extends Component {
                 </div>
                 <div className='flex justify-center gap-4'>
                   <input className='w-fit outline-none mt-4 border-2 border-[#6F6F6F] focus:border-black py-1 px-2 rounded-lg' type="number" min="1" max="99" value={this.state.txtQuantity} onChange={(e) => { this.setState({ txtQuantity: e.target.value }) }} />
-                  <input className='flex-1 mt-4 bg-black text-white rounded-xl' type="submit" value="ADD TO CART" onClick={(e) => this.btnAdd2CartClick(e)} />
+                  <Button className='flex-1 cursor-pointer mt-4 rounded-xl' type="submit" value="ADD TO CART" onClick={(e) => this.btnAdd2CartClick(e)} >ADD TO CART</Button>
                 </div>
                 <div className='grid grid-cols-9 gap-8 mt-4'>
                   <div className='col-span-3 flex flex-row items-center gap-3'>
@@ -147,23 +215,23 @@ class ProductDetail extends Component {
               <div className='w-full'>
                 <div>
                   <span>Excelent</span>
-                  <Progress color='warning' aria-label="Loading..." value={90} className="w-full"/>
+                  <Progress color='warning' aria-label="Loading..." value={90} className="w-full" />
                 </div>
                 <div>
                   <span>Good</span>
-                  <Progress color='warning' aria-label="Loading..." value={80} className="w-full"/>
+                  <Progress color='warning' aria-label="Loading..." value={80} className="w-full" />
                 </div>
                 <div>
                   <span>Average</span>
-                  <Progress color='warning' aria-label="Loading..." value={60} className="w-full"/>
+                  <Progress color='warning' aria-label="Loading..." value={60} className="w-full" />
                 </div>
                 <div>
                   <span>Below Average</span>
-                  <Progress color='warning' aria-label="Loading..." value={30} className="w-full"/>
+                  <Progress color='warning' aria-label="Loading..." value={30} className="w-full" />
                 </div>
                 <div>
                   <span>Poor</span>
-                  <Progress color='warning' aria-label="Loading..." value={10} className="w-full"/>
+                  <Progress color='warning' aria-label="Loading..." value={10} className="w-full" />
                 </div>
               </div>
             </div>
@@ -171,6 +239,7 @@ class ProductDetail extends Component {
         </div>
       );
     }
+
     return (<div />);
   }
   componentDidMount() {
@@ -182,8 +251,10 @@ class ProductDetail extends Component {
     this.setState({ loading: true })
     axios.get('/api/customer/products/' + id).then((res) => {
       const result = res.data;
+      const listReview = res.data.review
       this.setState({ product: result });
       this.setState({ loading: false })
+      this.setState({ review: listReview })
     });
   }
   btnAdd2CartClick(e) {
@@ -200,9 +271,10 @@ class ProductDetail extends Component {
         mycart[index].quantity += quantity;
       }
       this.context.setMycart(mycart);
-      alert('OK BABY!');
+      this.congratsOpen()
+      // alert('OK BABY!');
     } else {
-      alert('Please input quantity');
+      this.onOpen()
     }
   }
 }

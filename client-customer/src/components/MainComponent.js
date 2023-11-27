@@ -11,7 +11,7 @@ import Login from './LoginComponent';
 import Myprofile from './MyprofileComponent';
 import Mycart from './MycartComponent';
 import Myorders from './MyordersComponent';
-// import Feature from "./FeatureComponent"
+import Footer from "./FooterComponent";
 
 class Main extends Component {
   render() {
@@ -32,6 +32,7 @@ class Main extends Component {
           <Route path='/mycart' element={<Mycart />} />
           <Route path='/myorders' element={<Myorders />} />
         </Routes>
+        <Footer/>
       </div>
     );
   }

@@ -6,7 +6,6 @@ import { User } from "@nextui-org/react";
 
 
 class Inform extends Component {
-
     static contextType = MyContext; // using this.context to access global state
     render() {
         return (

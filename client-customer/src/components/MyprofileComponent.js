@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { Component } from 'react';
 import { Navigate } from 'react-router-dom';
 import MyContext from '../contexts/MyContext';
+import {Button} from "@nextui-org/react";
 
 class Myprofile extends Component {
   static contextType = MyContext; // using this.context to access global state
@@ -40,7 +41,7 @@ class Myprofile extends Component {
 
                   <div className="sm:col-span-3">
                     <label htmlFor="text" className="block text-sm font-medium leading-6 text-gray-900">
-                      Pass word
+                      Password
                     </label>
                     <div className="mt-2">
                       <input
@@ -87,12 +88,12 @@ class Myprofile extends Component {
               </div>
             </div>
             <div className="mt-6 flex items-center justify-center gap-x-6">
-              <button
+              <Button
                 type="submit" value="UPDATE" onClick={(e) => this.btnUpdateClick(e)}
                 className="rounded-md bg-[#2E2E2E] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 Update
-              </button>
+              </Button>
             </div>
           </form>
         </form>
