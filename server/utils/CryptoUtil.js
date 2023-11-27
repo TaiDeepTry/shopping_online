@@ -1,7 +1,7 @@
 //CLI: npm install nodemailer --save
 const nodemailer = require('nodemailer');
-// const MyConstants = require('./MyConstants');
-import MyConstants from "./MyConstants";
+// import MyConstants from "./MyConstants";
+const MyConstants = require('./MyConstants');
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
