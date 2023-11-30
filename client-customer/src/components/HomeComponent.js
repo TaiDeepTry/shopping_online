@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Banner from './BannerComponent';
 import { Spinner } from "@nextui-org/react";
+import TawkMessengerReact from '@tawk.to/tawk-messenger-react';
 
 
 class Home extends Component {
@@ -94,6 +95,9 @@ class Home extends Component {
                         {allprods}
                     </div>
                 </div>
+                                        <TawkMessengerReact
+                    propertyId="6566f97426949f791135cd4e"
+                    widgetId="1hgd3ssb2" />
             </div >
         );
     }
