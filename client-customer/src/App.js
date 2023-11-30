@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import Main from './components/MainComponent';
 import MyProvider from './contexts/MyProvider';
 import { NextUIProvider } from "@nextui-org/react";
+import {ThemeProvider as NextThemesProvider} from "next-themes";
 
 
 class App extends Component {
@@ -11,9 +12,11 @@ class App extends Component {
     return (
       <MyProvider>
         <NextUIProvider>
+        <NextThemesProvider attribute="class" defaultTheme="light">
           <BrowserRouter >
             <Main />
           </BrowserRouter>
+          </NextThemesProvider>
         </NextUIProvider>
       </MyProvider>
     );
