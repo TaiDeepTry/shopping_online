@@ -29,6 +29,7 @@ class Order extends Component {
         </tr>
       );
     });
+    
     if (this.state.order) {
       var items = this.state.order.items.map((item, index) => {
         return (

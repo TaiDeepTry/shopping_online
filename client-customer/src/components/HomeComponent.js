@@ -2,10 +2,15 @@ import axios from 'axios';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Banner from './BannerComponent';
-import { Spinner } from "@nextui-org/react";
+import { Spinner, Pagination, Button } from "@nextui-org/react";
+import MyContext from '../contexts/MyContext';
+
+// ...
+
 
 
 class Home extends Component {
+    static contextType = MyContext;
     constructor(props) {
         super(props);
         this.state = {
@@ -15,26 +20,42 @@ class Home extends Component {
             showBanner: true,
             loadingAll: true,
             loadingNew: true,
-            loadingHot: true
+            loadingHot: true,
+            currentPage: 1,
         };
     }
+    handleNextPage = () => {
+        this.setState(prevState => ({ currentPage: prevState.currentPage + 1 }));
+    };
+
+    handlePreviousPage = () => {
+        this.setState(prevState => ({ currentPage: prevState.currentPage - 1 }));
+    };
+    handlePageChange = (pageNumber) => {
+        this.setState({ currentPage: pageNumber });
+    };
     render() {
-        const allprods = this.state.allprods.map((item) => {
-            return (
-                <div key={item._id} href="" className="group">
-                    <div
-                        className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
-                        <Link to={'/product/' + item._id}>
-                            <img src={"data:image/jpg;base64," + item.image}
-                                alt='phone img'
-                                className="h-full w-full object-cover object-center group-hover:opacity-75" />
-                        </Link>
+
+        const allprods = this.state.allprods
+            .slice((this.state.currentPage - 1) * 4, this.state.currentPage * 4)
+            .map((item) => {
+                return (
+                    <div key={item._id} href="" className="group">
+                        <div
+                            className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
+                            <Link to={'/product/' + item._id}>
+                                <img src={"data:image/jpg;base64," + item.image}
+                                    alt='phone img'
+                                    className="h-full w-full object-cover object-center group-hover:opacity-75" />
+                            </Link>
+                        </div>
+                        <h3 className="mt-4 text-sm text-gray-700">{item.name}</h3>
+                        <p className="mt-1 text-lg font-medium text-gray-900">${item.price}</p>
                     </div>
-                    <h3 className="mt-4 text-sm text-gray-700">{item.name}</h3>
-                    <p className="mt-1 text-lg font-medium text-gray-900">${item.price}</p>
-                </div>
-            )
-        });
+                )
+            });
+        const totalPages = Math.ceil(this.state.allprods.length / 4);
+        const pages = [...Array(totalPages).keys()].map(num => num + 1);
         const newprods = this.state.newprods.map((item) => {
             return (
                 <div key={item._id} href="" className="group">
@@ -42,7 +63,7 @@ class Home extends Component {
                         className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
                         <Link to={'/product/' + item._id}>
                             <img src={"data:image/jpg;base64," + item.image}
-                            alt='phone img'
+                                alt='phone img'
                                 className="h-full w-full object-cover object-center group-hover:opacity-75" />
                         </Link>
                     </div>
@@ -58,7 +79,7 @@ class Home extends Component {
                         className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
                         <Link to={'/product/' + item._id}>
                             <img src={"data:image/jpg;base64," + item.image}
-                            alt='phone img'
+                                alt='phone img'
                                 className="h-full w-full object-cover object-center group-hover:opacity-75" />
                         </Link>
                     </div>
@@ -66,9 +87,9 @@ class Home extends Component {
                     <p className="mt-1 text-lg font-medium text-gray-900">${item.price}</p>
                 </div>
             );
-        })
-
+        }) // In ra console giá trị của token
         return (
+
             <div className='w-5/6 mx-auto mb-20' >
                 {this.state.showBanner && <Banner onClose={this.closeBanner} />}
                 <div div className="pb-20" >
@@ -96,6 +117,13 @@ class Home extends Component {
                         {this.state.loadingAll && <Spinner className="block" onClose={this.loadingAll} />}
                         {allprods}
                     </div>
+                    <div className='flex items-center w-full justify-center'>
+                        <Pagination
+                            total={totalPages}
+                            currentPage={this.state.currentPage}
+                            onChange={(page) => this.handlePageChange(page)}
+                        />
+                    </div>
                 </div>
             </div >
         );
@@ -107,28 +135,28 @@ class Home extends Component {
     }
     // apis
     apiGetNewProducts() {
-        this.setState({loadingNew : true})
+        this.setState({ loadingNew: true })
         axios.get('/api/customer/products/new').then((res) => {
             const result = res.data;
             this.setState({ newprods: result });
-            this.setState({loadingNew : false})
+            this.setState({ loadingNew: false })
         });
     }
     apiGetHotProducts() {
-        this.setState({loadingHot : true})
+        this.setState({ loadingHot: true })
         axios.get('/api/customer/products/hot').then((res) => {
             const result = res.data;
             this.setState({ hotprods: result });
-            this.setState({loadingHot : false})
+            this.setState({ loadingHot: false })
 
         });
     }
     apiGetAllProducts = () => {
-        this.setState({loadingAll : true})
+        this.setState({ loadingAll: true })
         axios.get("api/customer/products").then((res) => {
             const result = res.data;
             this.setState(({ allprods: result }));
-            this.setState({loadingAll : false})
+            this.setState({ loadingAll: false })
         });
     };
     closeBanner = () => {

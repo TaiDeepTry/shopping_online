@@ -82,5 +82,6 @@ class Product extends Component {
       this.setState({ products: result.products, noPages: result.noPages, curPage: result.curPage });
     });
   }
+
 }
 export default Product;

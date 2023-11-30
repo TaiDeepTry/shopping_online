@@ -11,6 +11,10 @@ const CategoryDAO = require('../models/CategoryDAO');
 const ProductDAO = require('../models/ProductDAO');
 const CustomerDAO = require('../models/CustomerDAO');
 const OrderDAO = require('../models/OrderDAO');
+const ReviewDAO = require('../models/ReviewDAO');
+
+
+
 // category
 router.get('/categories', async function (req, res) {
   const categories = await CategoryDAO.selectAll();
@@ -25,10 +29,12 @@ router.get('/products/new', async function (req, res) {
   const products = await ProductDAO.selectTopNew(4);
   res.json(products);
 });
+
 router.get('/products/hot', async function (req, res) {
-  const products = await ProductDAO.selectTopHot(3);
-  res.json(products);
+  const review = await ProductDAO.selectTopHot(3);
+  res.json(review);
 });
+
 router.get('/products/category/:cid', async function (req, res) {
   const _cid = req.params.cid;
   const products = await ProductDAO.selectByCatID(_cid);
@@ -46,17 +52,44 @@ router.get('/products/:id', async function (req, res) {
   const product = await ProductDAO.selectByID(_id);
   res.json(product);
 });
-
-// product
-router.put('/products/favorite/:id', JwtUtil.checkToken, async function (req, res) {
+//get product review by product id
+router.get("/product/review/:id", async (req, res) => {
   const _id = req.params.id;
-  const newStatus = req.body.favorite;
-  try {
-    const result = await ProductDAO.updateFavoriteState(_id, newStatus);
-    res.json({message: 'Favorite state updated successfully', product: result });
-  } catch (error) {
-    res.json({ success: false, message: 'Failed to update favorite state', error: error.message });
+  const reviews = await ReviewDAO.selectByProductId(_id);
+  res.json(reviews);
+})
+
+router.post('/api/customer/login-after-token-check/', (req, res) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({ success: false, message: 'No token provided.' });
   }
+
+  jwt.verify(token, 'YOUR_SECRET_KEY', (err, user) => {
+    if (err) {
+      return res.status(403).json({ success: false, message: 'Invalid token.' });
+    }
+
+    // If token is valid, return user info
+    res.json({ success: true, user: user });
+  });
+});
+
+router.post("/product/review/:id", JwtUtil.checkToken, async function (req, res) {
+  const productid = req.params.id;
+  const customerId = req.body.customerId;
+  const comment = req.body.comment;
+  const star = req.body.star;
+  const review = {
+    productId: productid,
+    customerId: customerId,
+    comment: comment,
+    star: star
+  };
+  const result = await ReviewDAO.insert(review);
+  res.json(result);
 });
 // customer
 router.post('/signup', async function (req, res) {
@@ -114,6 +147,7 @@ router.get('/token', JwtUtil.checkToken, function (req, res) {
   const token = req.headers['x-access-token'] || req.headers['authorization'];
   res.json({ success: true, message: 'Token is valid', token: token });
 });
+
 // myprofile
 router.put('/customers/:id', JwtUtil.checkToken, async function (req, res) {
   const _id = req.params.id;

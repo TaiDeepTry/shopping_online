@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import MyContext from '../contexts/MyContext';
 import withRouter from '../utils/withRouter';
 import { Button, Input } from '@nextui-org/react';
+import Cookies from 'js-cookie';
 class Login extends Component {
   static contextType = MyContext; // using this.context to access global state
   constructor(props) {
@@ -12,7 +13,11 @@ class Login extends Component {
       empty: false,
     };
   }
+
   render() {
+    if (this.context.isLoggedIn) {
+      this.props.navigate('/home');
+    }
     return (
       <div className="flex min-h-full w-1/3 flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -28,18 +33,18 @@ class Login extends Component {
 
         <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
           <form className="space-y-6" action="#" autoComplete='off' method="POST">
-              <div className="mt-2">
-                <Input
-                  type="text" onChange={(e) => { this.setState({ txtUsername: e.target.value }) }}
-                  onFocus={() => { this.setState({ incorrect: false, empty: false }) }}
-                  color='default'
-                  label='Username'
-                  labelPlacement='outside'
-                  isRequired={true}
-                  variant='bordered'
-                  isInvalid={this.state.incorrect || this.state.empty}
-                />
-              </div>
+            <div className="mt-2">
+              <Input
+                type="text" onChange={(e) => { this.setState({ txtUsername: e.target.value }) }}
+                onFocus={() => { this.setState({ incorrect: false, empty: false }) }}
+                color='default'
+                label='Username'
+                labelPlacement='outside'
+                isRequired={true}
+                variant='bordered'
+                isInvalid={this.state.incorrect || this.state.empty}
+              />
+            </div>
 
             <div>
               <div className="mt-4">
@@ -80,6 +85,11 @@ class Login extends Component {
       </div>
     );
   }
+  componentDidMount() {
+    let token = Cookies.get("user_token");
+    console.log(token); // In ra console giá trị của token
+    console.log(this.context); // In ra console giá trị của token
+  }
   // event-handlers
   btnLoginClick(e) {
     e.preventDefault();
@@ -95,16 +105,36 @@ class Login extends Component {
   }
   // apis
   apiLogin(account) {
-    axios.post('/api/customer/login', account).then((res) => {
-      const result = res.data;
-      if (result.success === true) {
-        this.context.setToken(result.token);
-        this.context.setCustomer(result.customer);
-        this.props.navigate('/home');
-      } else {
-        this.setState({ incorrect: true });
-      }
+    axios.post('/api/customer/login', account)
+      .then((res) => {
+        const result = res.data;
+        if (result.success === true) {
+          // Xác nhận đăng nhập thành công
+          // Lưu token vào context và thông tin người dùng (nếu cần thiết)
+          this.context.setToken(result.token);
+          this.context.setCustomer(result.customer);
+          // Tạo và lưu cookie
+          this.props.navigate('/home');
+          this.createLoginCookie(result.token);
+        } else {
+          // Xác nhận đăng nhập thất bại
+          this.setState({ incorrect: true });
+        }
+      })
+      .catch((error) => {
+        // Xử lý lỗi khi gửi yêu cầu đăng nhập
+        console.error('Login failed:', error);
+        // Hiển thị thông báo lỗi cho người dùng (nếu cần)
+      });
+  }
+  ccreateLoginCookie(token) {
+    const expires = new Date();
+    expires.setTime(expires.getTime() + 30 * 24 * 60 * 60 * 1000);
+    Cookies.set('user_token', token, {
+      expires: expires,
+      path: '/',
     });
   }
+
 }
 export default withRouter(Login);
