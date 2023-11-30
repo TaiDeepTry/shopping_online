@@ -7,6 +7,11 @@ const ProductDAO = {
     const noProducts = await Models.Product.find(query).count().exec();
     return noProducts;
   },
+  async selectAll(){
+    const query = {}
+    const product = await Models.Product.find(query).exec()
+    return product
+  },
   async selectBySkipLimit(skip, limit) {
     const query = {};
     const products = await Models.Product.find(query).skip(skip).limit(limit).exec();
@@ -60,7 +65,7 @@ const ProductDAO = {
   async selectByCatID(_cid) {
     const query = { 'category._id': _cid };
     const products = await Models.Product.find(query).exec();
-    return products;
+    return products;  
   },
   async selectByKeyword(keyword) {
     const query = { name: { $regex: new RegExp(keyword, "i") } };

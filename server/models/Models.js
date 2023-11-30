@@ -40,10 +40,18 @@ const OrderSchema = mongoose.Schema({
   customer: CustomerSchema,
   items: [ItemSchema]
 }, { versionKey: false });
+const ReviewSchema = mongoose.Schema({
+  _id: mongoose.Schema.Types.ObjectId,
+  productId: String,
+  customerId: String,
+  comment: String,
+  star: Number
+  }, { versionKey: false });
 // models
 const Admin = mongoose.model('Admin', AdminSchema);
 const Category = mongoose.model('Category', CategorySchema);
 const Customer = mongoose.model('Customer', CustomerSchema);
 const Product = mongoose.model('Product', ProductSchema);
 const Order = mongoose.model('Order', OrderSchema);
-module.exports = { Admin, Category, Customer, Product, Order };
+const Review = mongoose.model('Review', ReviewSchema);
+module.exports = { Admin, Category, Customer, Product, Order, Review };

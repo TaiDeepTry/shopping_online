@@ -54,6 +54,11 @@ router.delete('/categories/:id', JwtUtil.checkToken, async function (req, res) {
   res.json(result);
 });
 // product
+
+router.get('/productss', async function (req, res) {
+  const products = await ProductDAO.selectAll();
+  res.json(products);
+});
 router.get('/products', JwtUtil.checkToken, async function (req, res) {
   // pagination
   const noProducts = await ProductDAO.selectByCount();
